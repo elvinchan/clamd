@@ -486,7 +486,7 @@ func NewClient(network, address string) (c *Client, err error) {
 
 func checkError(s string) (err error) {
 	if strings.HasSuffix(s, "ERROR") {
-		err = fmt.Errorf("%s", strings.TrimRight(s, " ERROR"))
+		err = fmt.Errorf("%s", strings.TrimSuffix(s, " ERROR"))
 		return
 	}
 
