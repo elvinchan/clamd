@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/baruwa-enterprise/clamd"
+	"github.com/elvinchan/clamd"
 	flag "github.com/spf13/pflag"
 )
 
@@ -152,7 +152,7 @@ func instream(n, a string, w *sync.WaitGroup) {
 	if gopath == "" {
 		gopath = build.Default.GOPATH
 	}
-	fn := path.Join(gopath, "src/github.com/baruwa-enterprise/clamd/examples/eicar.txt")
+	fn := path.Join(gopath, "src/github.com/elvinchan/clamd/examples/eicar.txt")
 	ctx := context.Background()
 	s, e := c.InStream(ctx, fn)
 	if e != nil {
@@ -178,7 +178,7 @@ func fildes(n, a string, w *sync.WaitGroup) {
 	if gopath == "" {
 		gopath = build.Default.GOPATH
 	}
-	fn := path.Join(gopath, "src/github.com/baruwa-enterprise/clamd/examples/eicar.txt")
+	fn := path.Join(gopath, "src/github.com/elvinchan/clamd/examples/eicar.txt")
 	ctx := context.Background()
 	s, e := c.Fildes(ctx, fn)
 	if e != nil {

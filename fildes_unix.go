@@ -18,7 +18,7 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/baruwa-enterprise/clamd/protocol"
+	"github.com/elvinchan/clamd/protocol"
 )
 
 func (c *Client) fildesScan(tc *textproto.Conn, conn net.Conn, p string) (err error) {

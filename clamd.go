@@ -22,7 +22,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/baruwa-enterprise/clamd/protocol"
+	"github.com/elvinchan/clamd/protocol"
 )
 
 const (
