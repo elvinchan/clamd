@@ -95,7 +95,8 @@ func (c *Client) Ping(ctx context.Context) (b bool, err error) {
 }
 
 // Version returns the server version
-func (c *Client) Version(ctx context.Context) (v string, err error) {
+func (c *Client) Version(ctx context.Context) (engineVersion, dbVersion string, err error) {
+	var v string
 	if v, err = c.basicCmd(ctx, protocol.Version); err != nil {
 		return
 	}
@@ -108,6 +109,14 @@ func (c *Client) Version(ctx context.Context) (v string, err error) {
 	if err = checkError(v); err != nil {
 		return
 	}
+
+	ss := strings.Split(v, "/")
+	if len(ss) < 2 {
+		return "", "", fmt.Errorf("invalid response, got %v.", v)
+	}
+	ss[0] = strings.TrimPrefix(ss[0], "ClamAV ")
+	engineVersion = ss[0]
+	dbVersion = ss[1]
 
 	return
 }

@@ -148,7 +148,7 @@ func TestMethodsErrors(t *testing.T) {
 		t.Errorf("Expected *net.OpError want %q", e)
 	}
 
-	if _, e = c.Version(ctx); e == nil {
+	if _, _, e = c.Version(ctx); e == nil {
 		t.Fatalf("An error should be returned")
 	}
 	if _, ok := e.(*net.OpError); !ok {
@@ -277,11 +277,15 @@ func TestMethods(t *testing.T) {
 		t.Errorf("Expected %t got %t", true, b)
 	}
 
-	if rs, e = c.Version(ctx); e != nil {
+	engineVer, dbVer, e := c.Version(ctx)
+	if e != nil {
 		t.Fatalf("An error should not be returned")
 	}
-	if !strings.HasPrefix(rs, "Clam") {
-		t.Errorf("Expected version starting with Clam, got %q", rs)
+	if engineVer == "" {
+		t.Errorf("Expected engine version not empty")
+	}
+	if dbVer == "" {
+		t.Errorf("Expected db version not empty")
 	}
 
 	if rs, e = c.Stats(ctx); e != nil {

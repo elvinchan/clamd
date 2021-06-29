@@ -109,12 +109,12 @@ func version(n, a string, w *sync.WaitGroup) {
 	}
 	c.SetConnTimeout(5 * time.Second)
 	ctx := context.Background()
-	s, e := c.Version(ctx)
+	engineVer, dbVer, e := c.Version(ctx)
 	if e != nil {
 		log.Println(e)
 		return
 	}
-	fmt.Println("VERSION", s)
+	fmt.Println("VERSION", "ClamAV "+engineVer+"/"+dbVer)
 }
 
 func versionCmds(n, a string, w *sync.WaitGroup) {
