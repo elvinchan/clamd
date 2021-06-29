@@ -8,6 +8,6 @@ import (
 
 const fildesUnsupportErr = "Fildes is not supported"
 
-func (c *Client) fildesScan(tc *textproto.Conn, conn net.Conn, p string) (err error) {
+func (c *Client) fildesScan(_ *textproto.Conn, _ net.Conn, _ string) (err error) {
 	return errors.New(fildesUnsupportErr)
 }

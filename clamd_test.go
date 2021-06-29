@@ -116,10 +116,6 @@ func TestSettings(t *testing.T) {
 	if c.connTimeout != expected {
 		t.Errorf("Calling c.SetConnTimeout(%q) failed", expected)
 	}
-	c.SetCmdTimeout(expected)
-	if c.cmdTimeout != expected {
-		t.Errorf("Calling c.SetCmdTimeout(%q) failed", expected)
-	}
 	c.SetConnSleep(expected)
 	if c.connSleep != expected {
 		t.Errorf("Calling c.SetConnSleep(%q) failed", expected)
