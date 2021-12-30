@@ -248,6 +248,7 @@ func (c *Client) basicCmd(ctx context.Context, cmd protocol.Command) (r string, 
 	if err != nil {
 		return
 	}
+	defer conn.Close()
 
 	deadline, ok := ctx.Deadline()
 	if ok {
@@ -258,12 +259,12 @@ func (c *Client) basicCmd(ctx context.Context, cmd protocol.Command) (r string, 
 	}
 
 	tc = textproto.NewConn(conn)
-	defer tc.Close()
-
 	id := tc.Next()
 	tc.StartRequest(id)
 	fmt.Fprintf(tc.W, "n%s\n", cmd)
-	tc.W.Flush()
+	if err = tc.W.Flush(); err != nil {
+		return
+	}
 	tc.EndRequest(id)
 
 	tc.StartResponse(id)
@@ -308,6 +309,7 @@ func (c *Client) fileCmd(ctx context.Context, cmd protocol.Command, p string) (r
 	if err != nil {
 		return
 	}
+	defer conn.Close()
 
 	deadline, ok := ctx.Deadline()
 	if ok {
@@ -318,8 +320,6 @@ func (c *Client) fileCmd(ctx context.Context, cmd protocol.Command, p string) (r
 	}
 
 	tc = textproto.NewConn(conn)
-	defer tc.Close()
-
 	id = tc.Next()
 	tc.StartRequest(id)
 
@@ -336,7 +336,9 @@ func (c *Client) fileCmd(ctx context.Context, cmd protocol.Command, p string) (r
 	} else {
 		fmt.Fprintf(tc.W, "n%s %s\n", cmd, p)
 	}
-	tc.W.Flush()
+	if err = tc.W.Flush(); err != nil {
+		return
+	}
 	tc.EndRequest(id)
 
 	tc.StartResponse(id)
@@ -354,6 +356,7 @@ func (c *Client) readerCmd(ctx context.Context, i io.Reader) (r []*Response, err
 	if conn, err = c.dial(ctx); err != nil {
 		return
 	}
+	defer conn.Close()
 
 	deadline, ok := ctx.Deadline()
 	if ok {
@@ -364,8 +367,6 @@ func (c *Client) readerCmd(ctx context.Context, i io.Reader) (r []*Response, err
 	}
 
 	tc = textproto.NewConn(conn)
-	defer tc.Close()
-
 	id := tc.Next()
 	tc.StartRequest(id)
 
@@ -406,13 +407,17 @@ func (c *Client) streamCmd(tc *textproto.Conn, cmd protocol.Command, f io.Reader
 			if _, err = tc.W.Write(buf[0:n]); err != nil {
 				return
 			}
-			tc.W.Flush()
+			if err = tc.W.Flush(); err != nil {
+				return
+			}
 		}
 	}
 	if _, err = tc.W.Write([]byte{0, 0, 0, 0}); err != nil {
 		return
 	}
-	tc.W.Flush()
+	if err = tc.W.Flush(); err != nil {
+		return
+	}
 
 	return
 }

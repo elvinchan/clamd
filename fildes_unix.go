@@ -17,7 +17,9 @@ func (c *Client) fildesScan(tc *textproto.Conn, conn net.Conn, p string) (err er
 	var vf *os.File
 
 	fmt.Fprintf(tc.W, "n%s\n", protocol.Fildes)
-	tc.W.Flush()
+	if err = tc.W.Flush(); err != nil {
+		return
+	}
 
 	if f, err = os.Open(p); err != nil {
 		return
