@@ -229,8 +229,8 @@ func (c *Client) dial(ctx context.Context) (conn net.Conn, err error) {
 
 	for i := 0; i <= c.connRetries; i++ {
 		conn, err = d.DialContext(ctx, c.network, c.address)
-		if e, ok := err.(net.Error); ok && e.Timeout() {
-			time.Sleep(c.connSleep)
+		if err != nil {
+			time.Sleep(c.connSleep * time.Duration(i+1))
 			continue
 		}
 		break
