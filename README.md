@@ -11,7 +11,7 @@ Forked from https://github.com/baruwa-enterprise/clamd
 
 ## Requirements
 
-* Golang 1.10.x or higher
+* Golang 1.16.x or higher
 
 ## Getting started
 

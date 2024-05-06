@@ -387,17 +387,20 @@ func (c *Client) readerCmd(ctx context.Context, i io.Reader) (r []*Response, err
 
 func (c *Client) streamCmd(tc *textproto.Conn, cmd protocol.Command, f io.Reader) (err error) {
 	var n int
+	var eof bool
 
 	fmt.Fprintf(tc.W, "n%s\n", cmd)
 	b := make([]byte, 4)
-	for {
+
+	for !eof {
 		buf := make([]byte, ChunkSize)
 		if n, err = f.Read(buf); err != nil {
-			if err == io.EOF {
-				err = nil
-				break
+			if err != io.EOF {
+				return
 			}
-			return
+
+			err = nil
+			eof = true
 		}
 		if n > 0 {
 			binary.BigEndian.PutUint32(b, uint32(n))
